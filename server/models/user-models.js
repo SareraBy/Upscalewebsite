@@ -1,11 +1,11 @@
-const {Schema, model} = require('mongoose');
+const {Schema, model, models} = require('mongoose');
 const mongoose = require("mongoose");
 
 const UserSchema = new Schema({
     email: {type: String, unique: true, required: true},
     password: {type: String, required: true},
-    isActived: {type: Boolean, default: false},
+    isActivated: {type: Boolean, default: false},
     activationLink: {type: String},
 })
 
-module.exports = model("User", UserSchema);
+module.exports = models.User || model("User", UserSchema);

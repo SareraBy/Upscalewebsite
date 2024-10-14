@@ -1,30 +1,38 @@
-require('dotenv').config()
+require('dotenv').config();
 
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 const router = require('./router/index');
+
 const app = express();
+const port = process.env.PORT || 3000;
+
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
+app.use(helmet());
+app.use(express.static(path.join(__dirname, 'public'))); // Обслуживание статических файлов
 app.use('/api', router);
 
-const port = process.env.PORT || 3000;
-const start = async () =>{
-    try{
-        await mongoose.connect(process.env.DB,{
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+const start = async () => {
+    try {
+        await mongoose.connect(process.env.DB, {});
         app.listen(port, () => {
-            console.log(`Запустился ${port}`)})
-    }catch(err){
-        console.log(err)
+            console.log(`Запустился на порту ${port}`);
+        });
+    } catch (err) {
+        console.error(err);
     }
-}
+};
 
-// start
-start()
+process.on('SIGINT', async () => {
+    await mongoose.connection.close();
+    process.exit(0);
+});
+
+
+start();
