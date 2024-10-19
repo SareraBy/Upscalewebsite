@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const router = require('./router/index');
-
+const errorMiddleware = require('./middlewares/error-middleware');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -17,7 +17,7 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public'))); // Обслуживание статических файлов
 app.use('/api', router);
-
+app.use(errorMiddleware);
 const start = async () => {
     try {
         await mongoose.connect(process.env.DB, {});
@@ -28,6 +28,7 @@ const start = async () => {
         console.error(err);
     }
 };
+
 
 process.on('SIGINT', async () => {
     await mongoose.connection.close();

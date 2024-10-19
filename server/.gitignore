@@ -27,7 +27,8 @@
 *.db
 *.sqlite
 *.sql
-
+.env
+server/.env
 # logs
 npm-debug.log*
 yarn-debug.log*
